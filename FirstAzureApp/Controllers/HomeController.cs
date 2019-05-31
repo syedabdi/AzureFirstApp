@@ -5,14 +5,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using FirstAzureApp.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace FirstAzureApp.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IConfiguration configuration;
+
+        public HomeController(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
         public IActionResult Index()
         {
-            return View();
+            var model = this.configuration["Greeting"];
+            return View("Index",model);
         }
 
         public IActionResult About()
