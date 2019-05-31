@@ -35,7 +35,7 @@ namespace FirstAzureApp
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
-
+             services.AddTransient<IImageStore, ImageStore>();
             services.AddMvc();
         }
 
