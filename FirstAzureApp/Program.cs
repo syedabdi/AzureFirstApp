@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using FirstAzureApp.Data;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace FirstAzureApp
@@ -14,7 +17,19 @@ namespace FirstAzureApp
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            var host = BuildWebHost(args);
+            MigrateDatase(host);
+            host.Run();
+        }
+
+        public static void MigrateDatase(IWebHost host)
+        {
+            using (var scope = host.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider
+                    .GetRequiredService<ApplicationDbContext>();
+                context.Database.Migrate();
+            }
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
@@ -22,4 +37,6 @@ namespace FirstAzureApp
                 .UseStartup<Startup>()
                 .Build();
     }
+
+    
 }
